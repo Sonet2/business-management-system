@@ -1,0 +1,18 @@
+[
+    {
+        "typ": "Deska",
+        "podkategoria": null,
+        "gatunek": "Modrzew",
+        "m3": 40.0,
+        "dlugosc": 10.0,
+        "wymiary_sztuki": "2.5"
+    },
+    {
+        "typ": "Belka",
+        "podkategoria": null,
+        "gatunek": "Modrzew",
+        "m3": 42.0,
+        "dlugosc": 7.0,
+        "wymiary_sztuki": "10.0x10.0"
+    }
+]
