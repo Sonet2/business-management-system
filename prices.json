@@ -1,0 +1,43 @@
+{
+    "Deska":{
+        "Modrzew" : 100,
+        "Sosna" : 80,
+        "Świerk" : 70,
+        "Dąb" : 120
+    },
+    "Kantówka" :{
+        "Modrzew" : 150,
+        "Sosna" : 120,
+        "Świerk" : 100,
+        "Jodła" : 200
+    },
+    "Łaty":{
+        "Modrzew" : 50,
+        "Sosna" : 40,
+        "Świerk" : 30
+    },
+    "Belka":{
+        "Modrzew" : 200,
+        "Sosna" : 150,
+        "Świerk" : 120,
+        "Dąb" : 250
+    },
+    "Tarcica": {
+        "Obrzynana": {
+            "Modrzew": 100,
+            "Sosna": 80,
+            "Świerk": 70
+        },
+        "Nieobrzynana": {
+            "Modrzew": 90,
+            "Sosna": 70,
+            "Świerk": 60
+        },
+        "Heblowana": {
+            "Modrzew": 130,
+            "Sosna": 110,
+            "Świerk": 90
+        }
+    }
+    
+}
