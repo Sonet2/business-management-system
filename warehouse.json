@@ -14,5 +14,13 @@
         "m3": 42.0,
         "dlugosc": 7.0,
         "wymiary_sztuki": "10.0x10.0"
+    },
+    {
+        "typ": "Tarcica",
+        "podkategoria": "Heblowana",
+        "gatunek": "Modrzew",
+        "m3": 20.0,
+        "dlugosc": 10.0,
+        "wymiary_sztuki": "2.5"
     }
 ]

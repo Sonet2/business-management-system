@@ -19,7 +19,7 @@ def get_wood_types(prices, category, subcategory=None):
 def caltulate_m3(length, width, height):
     return length * width * height
 
-def add_to_warehouse(type_of_wood,subcategory, wood_spiece, m3, length, piece_dimensions):
+def write_to_warehouse(type_of_wood,subcategory, wood_spiece, m3, length, piece_dimensions):
     try:
         with open("warehouse.json", "r") as warehouse_file:
             warehouse_data = json.load(warehouse_file)
@@ -75,7 +75,69 @@ def adding_material():
         piece_dimensions = (f"{piece_width}x{piece_height}")
         print(f"Wymiary sztuki: {piece_dimensions} cm")
 
-    add_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)
+    write_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)
+
+def warehouse_status():
+    try:
+        with open("warehouse.json", "r") as warehouse:
+            data = json.load(warehouse)
+    except FileNotFoundError:
+        print("Brak danych w magazynie.")
+        return[]
+    except json.JSONDecodeError:
+        print("Błąd odczytu danych magazynu.")
+        return[]   
+    
+    print("Stan magazynu:")
+    print("")
+    for i, entry in enumerate(data):
+        podkategoria = f"{entry['podkategoria']}" if entry['podkategoria'] is not None else ""
+        print(f"{i + 1}. {entry['typ']} {podkategoria} - ({entry['gatunek']}) - {entry['m3']} m³, długość: {entry['dlugosc']} m, wymiary sztuki: {entry['wymiary_sztuki']} cm")
+        print("")
+
+def delete_material():
+    try:
+        with open("warehouse.json", "r") as warehouse:
+            data = json.load(warehouse)
+    except FileNotFoundError:
+        print("Brak danych w magazynie.")
+        return[]
+    except json.JSONDecodeError:
+        print("Błąd odczytu danych magazynu.")
+        return[]   
+    
+    print("Stan magazynu:")
+    print("")
+    for i, entry in enumerate(data):
+        podkategoria = f"{entry['podkategoria']}" if entry['podkategoria'] is not None else ""
+        print(f"{i + 1}. {entry['typ']} {podkategoria} - ({entry['gatunek']}) - {entry['m3']} m³, długość: {entry['dlugosc']} m, wymiary sztuki: {entry['wymiary_sztuki']} cm")
+        print("")    
+    
+    delete =int(input("Podaj numer pozycji do usunięcia: "))
+    if 1 <= delete <= len(data):
+        del data[delete - 1]
+        print("Pozycja została usunięta.")
+        with open("warehouse.json", "w") as warehouse:
+            json.dump(data, warehouse, ensure_ascii=False, indent=4)    
 
 
-adding_material()
+    
+
+    
+    
+
+print("Wybierz opcję:")
+print("1. Dodaj drewno do magazynu")
+print("2. Sprawdź stan magazynu")
+print("3. Usuń drewno z magazynu")
+option = input("Wprowadź numer opcji: ")
+if option == "1":
+    adding_material()
+elif option == "2":
+    warehouse_status()
+elif option == "3":
+    delete_material()
+else:
+    print("Nieprawidłowa opcja. Proszę wybrać 1 lub 2.")
+
+
