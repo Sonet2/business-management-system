@@ -121,11 +121,6 @@ def delete_material():
             json.dump(data, warehouse, ensure_ascii=False, indent=4)    
 
 
-    
-
-    
-    
-
 print("Wybierz opcję:")
 print("1. Dodaj drewno do magazynu")
 print("2. Sprawdź stan magazynu")

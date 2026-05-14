@@ -3,7 +3,9 @@
         "Modrzew" : 100,
         "Sosna" : 80,
         "Świerk" : 70,
-        "Dąb" : 120
+        "Jodła" : 90,
+        "Dąb" : 120,
+        "Buk" : 110
     },
     "Kantówka" :{
         "Modrzew" : 150,
@@ -12,15 +14,19 @@
         "Jodła" : 200
     },
     "Łaty":{
-        "Modrzew" : 50,
         "Sosna" : 40,
         "Świerk" : 30
+    },
+    "Kontrłaty":{
+        "Sosna" : 30,
+        "Świerk" : 20,
+        "Jodła" : 50,
+        "Modrzew" : 60
     },
     "Belka":{
         "Modrzew" : 200,
         "Sosna" : 150,
-        "Świerk" : 120,
-        "Dąb" : 250
+        "Świerk" : 120
     },
     "Tarcica": {
         "Obrzynana": {
