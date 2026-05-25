@@ -1,8 +1,26 @@
 import json
 import os
 
-print("POLMAR")
-print("Dodawanie drewna do magazynu")
+def main():
+    print("POLMAR")
+    print("Dodawanie drewna do magazynu")
+
+    print("Wybierz opcję:")
+    print("1. Dodaj drewno do magazynu")
+    print("2. Sprawdź stan magazynu")
+    print("3. Usuń drewno z magazynu")
+    option = input("Wprowadź numer opcji: ")
+    czy_zakonczyc = "nie"   
+    while czy_zakonczyc != "tak":
+        if option == "1":
+            adding_material()
+        elif option == "2":
+            warehouse_status()
+        elif option == "3":
+            delete_material()
+        else:
+            print("Nieprawidłowa opcja. Proszę wybrać 1, 2 lub 3.")
+        czy_zakonczyc = input("Czy chcesz zakończyć operacje w magazynie? (tak/nie): ")
 
 with open("prices.json", "r") as types_of_wood:
     data = json.load(types_of_wood)
@@ -75,7 +93,10 @@ def adding_material():
         piece_dimensions = (f"{piece_width}x{piece_height}")
         print(f"Wymiary sztuki: {piece_dimensions} cm")
 
-    write_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)
+    try:
+        write_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)
+    except Exception as e:
+        print(f"Wystąpił błąd podczas zapisywania danych: {e}")
 
 def warehouse_status():
     try:
@@ -120,19 +141,7 @@ def delete_material():
         with open("warehouse.json", "w") as warehouse:
             json.dump(data, warehouse, ensure_ascii=False, indent=4)    
 
-
-print("Wybierz opcję:")
-print("1. Dodaj drewno do magazynu")
-print("2. Sprawdź stan magazynu")
-print("3. Usuń drewno z magazynu")
-option = input("Wprowadź numer opcji: ")
-if option == "1":
-    adding_material()
-elif option == "2":
-    warehouse_status()
-elif option == "3":
-    delete_material()
-else:
-    print("Nieprawidłowa opcja. Proszę wybrać 1 lub 2.")
+if __name__ == "__main__":
+    main()
 
 

@@ -4,9 +4,6 @@ import os
 import prettytable
 from prettytable import PrettyTable
 
-print("POLMAR")
-print("Obliczanie ceny drewna budowlanego")
-
 with open("prices.json", "r") as types_of_wood:
     data = json.load(types_of_wood)
 
@@ -39,12 +36,16 @@ def calculate_price():
 
     how_many_m3 = float(input("Podaj ilość w m3: "))
     length = float(input("Podaj długość w metrach: "))
+    if not type_of_wood == "Deska" and not type_of_wood == "Tarcica":
+        dimensions = input("Podaj wymiary sztuki (szerokość x wysokość w cm): ")
+    else:
+        dimensions = input("Podaj grubość sztuki w cm: ")
 
     wood_price = data[type_of_wood][subcategory][wood_spiece] if subcategory else data[type_of_wood][wood_spiece]
 
     final_price = how_many_m3 * wood_price
 
-    
+
     return{
         "typ": type_of_wood,
         "podkategoria": subcategory,
@@ -52,50 +53,58 @@ def calculate_price():
         "m3": how_many_m3,
         "dlugosc": length,
         "cena_jednostkowa": wood_price,
-        "cena_łączna": final_price
+        "cena_łączna": final_price,
+        "wymiary_sztuki": dimensions
     }
+def main():
+    print("POLMAR")
+    print("Obliczanie ceny drewna budowlanego")
 
+    all_orders = []
+    czy_zakonczyc = "nie"
 
-    
-all_orders = []
-czy_zakonczyc = "nie"
+    while czy_zakonczyc != "tak":
+        all_orders.append(calculate_price())
+        czy_zakonczyc = input("Czy chcesz zakończyć operacje zamowienia dla klienta? (tak/nie): ")
 
-while czy_zakonczyc != "tak":
+        if czy_zakonczyc.lower() == "tak":
+            print("Zamowienie dla klienta:")
+            table = PrettyTable()
+            table.field_names = ["Lp.", "Typ", "Podkategoria", "Gatunek", "Ilość zamówiona (m3)","Długość (m)", "Wymiary sztuki (cm)", "Cena jednostkowa (PLN/m3)", "Cena łączna (PLN)"]
+            table.hrules = prettytable.ALL
+            for idx, order in enumerate(all_orders, start=1):
+                table.add_row([
+                    idx,
+                    order["typ"],
+                    order["podkategoria"] if order["podkategoria"] else "brak",
+                    order["gatunek"],
+                    order["m3"],
+                    order["dlugosc"],
+                    order["wymiary_sztuki"],     
+                    order["cena_jednostkowa"],
+                    order["cena_łączna"],
+                ])
 
-    all_orders.append(calculate_price())
-    czy_zakonczyc = input("Czy chcesz zakończyć? (tak/nie): ")
+            total_m3 = sum(order["m3"] for order in all_orders)
+            total_price = sum(order["cena_łączna"] for order in all_orders)
 
-    if czy_zakonczyc.lower() == "tak":
-        print("Zamowienie dla klienta:")
-        table = PrettyTable()
-        table.field_names = ["Lp.", "Typ", "Podkategoria", "Gatunek", "Ilość zamówiona (m3)","Długość (m)", "Cena jednostkowa (PLN/m3)", "Cena łączna (PLN)"]
-        table.hrules = prettytable.ALL
-        table.vrules = prettytable.ALL
-        for idx, order in enumerate(all_orders, start=1):
             table.add_row([
-                idx,
-                order["typ"],
-                order["podkategoria"] if order["podkategoria"] else "brak",
-                order["gatunek"],
-                order["m3"],
-                order["dlugosc"],
-                order["cena_jednostkowa"],
-                order["cena_łączna"]
+                "",
+                "SUMA",
+                "",
+                "",
+                total_m3,
+                "",
+                "",
+                "",
+                total_price
             ])
-            divider = True
+            print(table)
 
-        total_m3 = sum(order["m3"] for order in all_orders)
-        total_price = sum(order["cena_łączna"] for order in all_orders)
+            if total_m3 > 9:
+                print("UWAGA: Zamówienie przekracza ładowność samochodu! Lepiej zamówić transport zewnetrzny.")
 
-        table.add_row([
-            "",
-            "SUMA",
-            "",
-            "",
-            total_m3,
-            "",
-            "",
-            total_price
-        ])
 
-        print(table)
+if __name__ == "__main__":
+    main()
+        

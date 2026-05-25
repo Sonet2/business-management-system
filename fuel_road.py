@@ -52,9 +52,14 @@ def calculate_fuel_cost(origin, destination):
         print(f"Szacowany koszt paliwa na trasie wynosi: {round(fuel_cost, 2)} zł")
         print(f"Szacowana ilość paliwa, która zostanie zużyta na trasie: {round(fuel_consumed, 2)} litrów")
 
-print("POLMAR")
-print("Obliczanie kosztów paliwa na trasie")
-origin = geocode_location(input("Podaj miejsce startu: "))
-destination = geocode_location(input("Podaj miejsce docelowe: "))
+def main():
+    print("POLMAR")
+    print("Obliczanie kosztów paliwa na trasie")
+    origin = geocode_location(input("Podaj miejsce startu: "))
+    destination = geocode_location(input("Podaj miejsce docelowe: "))
 
-calculate_fuel_cost(origin, destination)
+    calculate_fuel_cost(origin, destination)
+
+
+if __name__ == "__main__":
+    main()
