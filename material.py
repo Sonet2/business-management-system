@@ -1,5 +1,6 @@
 import json
 import os
+import fuel_road
 
 import prettytable
 from prettytable import PrettyTable
@@ -53,21 +54,33 @@ def calculate_price():
         "m3": how_many_m3,
         "dlugosc": length,
         "cena_jednostkowa": wood_price,
-        "cena_łączna": final_price,
+        "cena_laczna": final_price,
         "wymiary_sztuki": dimensions
     }
 def main():
-    print("POLMAR")
-    print("Obliczanie ceny drewna budowlanego")
+    print("Kompletowanie materiałów dla klienta")
 
     all_orders = []
     czy_zakonczyc = "nie"
 
     while czy_zakonczyc != "tak":
         all_orders.append(calculate_price())
-        czy_zakonczyc = input("Czy chcesz zakończyć operacje zamowienia dla klienta? (tak/nie): ")
+        czy_zakonczyc = input("Czy chcesz zakończyć dodawanie materiałów? (tak/nie): ")
 
         if czy_zakonczyc.lower() == "tak":
+            total_cost = sum(order["cena_laczna"] for order in all_orders)
+            total_m3 = sum(order["m3"] for order in all_orders)
+
+            
+            full_order_info = {
+                "laczny_metraz": total_m3,
+                "laczna_cena": total_cost,
+                "pozycje": all_orders
+                
+            }
+            return full_order_info
+
+"""
             print("Zamowienie dla klienta:")
             table = PrettyTable()
             table.field_names = ["Lp.", "Typ", "Podkategoria", "Gatunek", "Ilość zamówiona (m3)","Długość (m)", "Wymiary sztuki (cm)", "Cena jednostkowa (PLN/m3)", "Cena łączna (PLN)"]
@@ -101,8 +114,7 @@ def main():
             ])
             print(table)
 
-            if total_m3 > 9:
-                print("UWAGA: Zamówienie przekracza ładowność samochodu! Lepiej zamówić transport zewnetrzny.")
+"""
 
 
 if __name__ == "__main__":
