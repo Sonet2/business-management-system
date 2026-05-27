@@ -4,7 +4,6 @@ import os
 def main():
     print("POLMAR")
     print("Dodawanie drewna do magazynu")
-
     print("Wybierz opcję:")
     print("1. Dodaj drewno do magazynu")
     print("2. Sprawdź stan magazynu")
@@ -21,6 +20,9 @@ def main():
         else:
             print("Nieprawidłowa opcja. Proszę wybrać 1, 2 lub 3.")
         czy_zakonczyc = input("Czy chcesz zakończyć operacje w magazynie? (tak/nie): ")
+        
+    
+
 
 with open("prices.json", "r") as types_of_wood:
     data = json.load(types_of_wood)
@@ -37,12 +39,15 @@ def get_wood_types(prices, category, subcategory=None):
 def caltulate_m3(length, width, height):
     return length * width * height
 
-def write_to_warehouse(type_of_wood,subcategory, wood_spiece, m3, length, piece_dimensions):
+def load_warehouse_data():
     try:
         with open("warehouse.json", "r") as warehouse_file:
-            warehouse_data = json.load(warehouse_file)
+            return json.load(warehouse_file)
     except (FileNotFoundError, json.JSONDecodeError):
-        warehouse_data = []
+        return []
+
+def write_to_warehouse(type_of_wood,subcategory, wood_spiece, m3, length, piece_dimensions):
+    warehouse_data = load_warehouse_data()
 
 
     new_entry={
@@ -92,6 +97,27 @@ def adding_material():
         piece_height = float(input("Podaj wysokość sztuki (cm): "))
         piece_dimensions = (f"{piece_width}x{piece_height}")
         print(f"Wymiary sztuki: {piece_dimensions} cm")
+
+    
+    warehouse_data = load_warehouse_data()
+
+    for entry in warehouse_data:
+        if (
+            type_of_wood == entry["typ"]
+            and subcategory == entry["podkategoria"]
+            and wood_spiece == entry["gatunek"]
+            and lenght == entry["dlugosc"]
+            and piece_dimensions == entry["wymiary_sztuki"]
+        ):
+            entry["m3"] += m3
+            print(f"Zaktualizowana ilość drewna: {entry['m3']} m³")
+
+            try:
+                with open("warehouse.json", "w") as warehouse_file:
+                    json.dump(warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+            except Exception as e:
+                print(f"Wystąpił błąd podczas zapisywania danych: {e}")
+            return
 
     try:
         write_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)

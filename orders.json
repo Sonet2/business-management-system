@@ -1,11 +1,8 @@
 {
-    "imie": "jan",
-    "nazwisko": "talarek",
+    "imie": "Jan",
+    "nazwisko": "Piatek",
     "dojazd": {
-        "adres_dostawy": [
-            20.000066,
-            50.015014
-        ],
+        "adres_dostawy": "Kraków, Polska",
         "dystans": 62.3,
         "koszt_paliwa": 56.693,
         "zużycie_paliwa": 8.722

@@ -41,15 +41,16 @@ def get_distance(origin, destination):
         return None
 
 
-def calculate_fuel_cost(origin, destination):
+def calculate_fuel_cost(origin, destination, destination_name):
     distance = get_distance(origin, destination)
+    dest = destination_name
     avg_fuel_per_100 = 14
     if distance is not None:
         fuel_cost = (distance / 100) * avg_fuel_per_100 * diesel_price
         fuel_consumed = (distance / 100) * avg_fuel_per_100
         
         fuel_info = {
-            "adres_dostawy": destination,
+            "adres_dostawy": dest,
             "dystans": distance,
             "koszt_paliwa": fuel_cost,
             "zużycie_paliwa": fuel_consumed
@@ -59,10 +60,15 @@ def calculate_fuel_cost(origin, destination):
 def main():
     print("POLMAR")
     print("Obliczanie kosztów paliwa na trasie")
-    origin = geocode_location(input("Podaj miejsce startu: "))
-    destination = geocode_location(input("Podaj miejsce docelowe: "))
+    origin_name = input("Podaj miejsce startu: ")
+    destination_name = input("Podaj miejsce docelowe: ")
+    origin = geocode_location(origin_name)
+    destination = geocode_location(destination_name)
 
-    calculate_fuel_cost(origin, destination)
+    calculate_fuel_cost(origin, destination, destination_name)
+
+    res = calculate_fuel_cost(origin, destination, destination_name)
+    print(res)
 
 
 

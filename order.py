@@ -29,7 +29,7 @@ def main():
             print("Nie można znaleźć lokalizacji. Sprawdź wprowadzone adresy i spróbuj ponownie.")
             return None
         else:
-            route_info = fuel_road.calculate_fuel_cost(origin_coords, destination_coords)
+            route_info = fuel_road.calculate_fuel_cost(origin_coords, destination_coords, destination)
 
         full_order_info = material.main()
         
