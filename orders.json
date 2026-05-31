@@ -1,6 +1,6 @@
 {
     "imie": "Jan",
-    "nazwisko": "Piatek",
+    "nazwisko": "Talarek",
     "dojazd": {
         "adres_dostawy": "Kraków, Polska",
         "dystans": 62.3,
@@ -8,8 +8,8 @@
         "zużycie_paliwa": 8.722
     },
     "zamowienie": {
-        "laczny_metraz": 10.0,
-        "laczna_cena": 1000.0,
+        "laczny_metraz": 20.0,
+        "laczna_cena": 2500.0,
         "pozycje": [
             {
                 "typ": "Deska",
@@ -20,6 +20,16 @@
                 "cena_jednostkowa": 100,
                 "cena_laczna": 1000.0,
                 "wymiary_sztuki": "2.5"
+            },
+            {
+                "typ": "Kantówka",
+                "podkategoria": null,
+                "gatunek": "Modrzew",
+                "m3": 10.0,
+                "dlugosc": 7.0,
+                "cena_jednostkowa": 150,
+                "cena_laczna": 1500.0,
+                "wymiary_sztuki": "10x10"
             }
         ]
     }

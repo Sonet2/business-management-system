@@ -1,0 +1,41 @@
+{
+    "Krokwie": {
+        "Długość krokwi (m)": 10.0,
+        "Wymiary krokwi (cm)": "10x10",
+        "Ilość krokwi": 40,
+        "Gatunek drewna": "Modrzew",
+        "Rozstaw krokwi (cm)": 80.0,
+        "Całkowity metraż krokwi (m3)": 4,
+        "Całkowity koszt krokwi (zł)": 600
+    },
+    "Murlaty": {
+        "Długość murlaty (m)": 20.0,
+        "Wymiary murlaty (cm)": "20x20",
+        "Ilość murlat": 2,
+        "Gatunek drewna": "Modrzew",
+        "Całkowity metraż murlat (m3)": 2,
+        "Całkowity koszt murlat (zł)": 320
+    },
+    "Jetki": {
+        "Długość jetki (m)": 5.0,
+        "Wymiary jetki (cm)": "10x10",
+        "Ilość jetek": 20,
+        "Gatunek drewna": "Modrzew",
+        "Całkowity metraż jetek (m3)": 1,
+        "Całkowity koszt jetek (zł)": 150
+    },
+    "Kontrlaty i Łaty": {
+        "Długość kontrłat (m)": 10.0,
+        "Wymiary kontrłat (cm)": "5x5",
+        "Ilość kontrłat": 40,
+        "Całkowity metraż kontrłat (m3)": 1,
+        "Całkowity koszt kontrłat (zł)": 40,
+        "Szerokość połaci (m)": 31,
+        "Wymiary łat (cm)": "5x5",
+        "Całkowity metraż łat (m3)": 2,
+        "Całkowity koszt łat (zł)": 58
+    },
+    "Płatew i Słupy": null,
+    "Suma m3 zamowienia": 10,
+    "Cena": 1168
+}

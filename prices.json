@@ -13,16 +13,9 @@
         "Świerk" : 100,
         "Jodła" : 200
     },
-    "Łaty":{
-        "Sosna" : 40,
-        "Świerk" : 30
-    },
-    "Kontrłaty":{
-        "Sosna" : 30,
-        "Świerk" : 20,
-        "Jodła" : 50,
-        "Modrzew" : 60
-    },
+    "Łaty" : 30,
+    "Kontrłaty" : 40,
+
     "Belka":{
         "Modrzew" : 200,
         "Sosna" : 150,
