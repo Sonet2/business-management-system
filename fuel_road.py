@@ -1,6 +1,6 @@
 # Fuel prices are currently hardcoded because there is no free fuel price API available online.
 # This logic lives in a separate file so it can be expanded later, once web scraping is learned.
-import requests
+import requests, math
 from dotenv import load_dotenv
 import os
 
@@ -52,8 +52,8 @@ def calculate_fuel_cost(origin, destination, destination_name):
         fuel_info = {
             "adres_dostawy": dest,
             "dystans": distance,
-            "koszt_paliwa": fuel_cost,
-            "zużycie_paliwa": fuel_consumed
+            "koszt_paliwa": math.ceil(fuel_cost),
+            "zużycie_paliwa": math.ceil(fuel_consumed)
         }
         return fuel_info
         

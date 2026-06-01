@@ -1,8 +1,5 @@
 import json
-import os
-import fuel_road
 
-import prettytable
 from prettytable import PrettyTable
 
 with open("prices.json", "r") as types_of_wood:
@@ -31,9 +28,25 @@ def calculate_price():
     else:
         subcategory = None
 
-    for i, wood in enumerate(get_wood_types(data, type_of_wood, subcategory if type_of_wood == "Tarcica" else None)):
-        print(f"{i + 1}. {wood}")
-    wood_spiece = input("Wybierz gatunek drewna: ")
+    # Pobierz wpis z cennika dla wybranego typu
+    entry = data[type_of_wood]
+    if not isinstance(entry, dict):
+        # entry to bezpośrednia cena (np. Łaty, Kontrłaty)
+        wood_spiece = None
+        wood_price = entry
+    else:
+        # entry to słownik gatunków lub podkategoria (Tarcica)
+        if type_of_wood == "Tarcica" and subcategory:
+            options = list(entry[subcategory].keys())
+        else:
+            options = list(entry.keys())
+        for i, wood in enumerate(options):
+            print(f"{i + 1}. {wood}")
+        wood_spiece = input("Wybierz gatunek drewna: ")
+        if type_of_wood == "Tarcica" and subcategory:
+            wood_price = entry[subcategory].get(wood_spiece, 0)
+        else:
+            wood_price = entry.get(wood_spiece, 0)
 
     how_many_m3 = float(input("Podaj ilość w m3: "))
     length = float(input("Podaj długość w metrach: "))
@@ -41,8 +54,6 @@ def calculate_price():
         dimensions = input("Podaj wymiary sztuki (szerokość x wysokość w cm): ")
     else:
         dimensions = input("Podaj grubość sztuki w cm: ")
-
-    wood_price = data[type_of_wood][subcategory][wood_spiece] if subcategory else data[type_of_wood][wood_spiece]
 
     final_price = how_many_m3 * wood_price
 
@@ -80,41 +91,7 @@ def main():
             }
             return full_order_info
 
-"""
-            print("Zamowienie dla klienta:")
-            table = PrettyTable()
-            table.field_names = ["Lp.", "Typ", "Podkategoria", "Gatunek", "Ilość zamówiona (m3)","Długość (m)", "Wymiary sztuki (cm)", "Cena jednostkowa (PLN/m3)", "Cena łączna (PLN)"]
-            table.hrules = prettytable.ALL
-            for idx, order in enumerate(all_orders, start=1):
-                table.add_row([
-                    idx,
-                    order["typ"],
-                    order["podkategoria"] if order["podkategoria"] else "brak",
-                    order["gatunek"],
-                    order["m3"],
-                    order["dlugosc"],
-                    order["wymiary_sztuki"],     
-                    order["cena_jednostkowa"],
-                    order["cena_łączna"],
-                ])
 
-            total_m3 = sum(order["m3"] for order in all_orders)
-            total_price = sum(order["cena_łączna"] for order in all_orders)
-
-            table.add_row([
-                "",
-                "SUMA",
-                "",
-                "",
-                total_m3,
-                "",
-                "",
-                "",
-                total_price
-            ])
-            print(table)
-
-"""
 
 
 if __name__ == "__main__":

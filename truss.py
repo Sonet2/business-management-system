@@ -174,7 +174,6 @@ def main():
         "Suma m3 zamowienia": 0,
         "Cena": 0,
     }
-
     while True:
         print("Wybierz pozycje z menu:")
         print("1. Dodaj krokwie")
@@ -214,11 +213,14 @@ def main():
             print("Zakończono obliczanie więźby dachowej.")
             with open("truss.json", "w", encoding="utf-8") as f:
                 json.dump(wiezba_dachowa_order, f, indent=4, ensure_ascii=False)
-    
+
+            return wiezba_dachowa_order
             print("Zamowienie poprawnie dodane do pliku truss.json")
             break
         else:
             print("Nieprawidłowy wybór.")
+        
+        
 
 if __name__ == "__main__":
     main()

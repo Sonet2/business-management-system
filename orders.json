@@ -1,36 +1,177 @@
-{
-    "imie": "Jan",
-    "nazwisko": "Talarek",
-    "dojazd": {
-        "adres_dostawy": "Kraków, Polska",
-        "dystans": 62.3,
-        "koszt_paliwa": 56.693,
-        "zużycie_paliwa": 8.722
+[
+    {
+        "imie": "Jan",
+        "nazwisko": "Talarek",
+        "dojazd": {
+            "adres_dostawy": "Kraków, Polska",
+            "dystans": 62.3,
+            "koszt_paliwa": 56.693,
+            "zużycie_paliwa": 8.722
+        },
+        "zamowienie": {
+            "laczny_metraz": 20.0,
+            "laczna_cena": 2500.0,
+            "pozycje": [
+                {
+                    "typ": "Deska",
+                    "podkategoria": null,
+                    "gatunek": "Modrzew",
+                    "m3": 10.0,
+                    "dlugosc": 5.0,
+                    "cena_jednostkowa": 100,
+                    "cena_laczna": 1000.0,
+                    "wymiary_sztuki": "2.5"
+                },
+                {
+                    "typ": "Kantówka",
+                    "podkategoria": null,
+                    "gatunek": "Modrzew",
+                    "m3": 10.0,
+                    "dlugosc": 7.0,
+                    "cena_jednostkowa": 150,
+                    "cena_laczna": 1500.0,
+                    "wymiary_sztuki": "10x10"
+                }
+            ]
+        }
     },
-    "zamowienie": {
-        "laczny_metraz": 20.0,
-        "laczna_cena": 2500.0,
-        "pozycje": [
-            {
-                "typ": "Deska",
-                "podkategoria": null,
-                "gatunek": "Modrzew",
-                "m3": 10.0,
-                "dlugosc": 5.0,
-                "cena_jednostkowa": 100,
-                "cena_laczna": 1000.0,
-                "wymiary_sztuki": "2.5"
+    {
+        "imie": "Jan",
+        "nazwisko": "Pawel",
+        "dojazd": {
+            "adres_dostawy": "rondo matecznego krakow",
+            "dystans": 57.3,
+            "koszt_paliwa": 52.14299999999999,
+            "zużycie_paliwa": 8.021999999999998
+        },
+        "zamowienie": {
+            "laczny_metraz": 10.0,
+            "laczna_cena": 1000.0,
+            "pozycje": [
+                {
+                    "typ": "Deska",
+                    "podkategoria": null,
+                    "gatunek": "Modrzew",
+                    "m3": 10.0,
+                    "dlugosc": 5.0,
+                    "cena_jednostkowa": 100,
+                    "cena_laczna": 1000.0,
+                    "wymiary_sztuki": "2.5"
+                }
+            ]
+        }
+    },
+    {
+        "imie": "Jan",
+        "nazwisko": "Tatowski",
+        "dojazd": {
+            "adres_dostawy": "rondo matecznego krakow",
+            "dystans": 57.3,
+            "koszt_paliwa": 53,
+            "zużycie_paliwa": 9
+        },
+        "zamowienie": {
+            "Krokwie": {
+                "Długość krokwi (m)": 10.0,
+                "Wymiary krokwi (cm)": "10x10",
+                "Ilość krokwi": 40,
+                "Gatunek drewna": "Modrzew",
+                "Rozstaw krokwi (cm)": 80.0,
+                "Całkowity metraż krokwi (m3)": 4,
+                "Całkowity koszt krokwi (zł)": 600
             },
-            {
-                "typ": "Kantówka",
-                "podkategoria": null,
-                "gatunek": "Modrzew",
-                "m3": 10.0,
-                "dlugosc": 7.0,
-                "cena_jednostkowa": 150,
-                "cena_laczna": 1500.0,
-                "wymiary_sztuki": "10x10"
-            }
-        ]
+            "Murlaty": {
+                "Długość murlaty (m)": 20.0,
+                "Wymiary murlaty (cm)": "20x20",
+                "Ilość murlat": 2,
+                "Gatunek drewna": "Modrzew",
+                "Całkowity metraż murlat (m3)": 2,
+                "Całkowity koszt murlat (zł)": 320
+            },
+            "Jetki": {
+                "Długość jetki (m)": 5.0,
+                "Wymiary jetki (cm)": "10x10",
+                "Ilość jetek": 20,
+                "Gatunek drewna": "Modrzew",
+                "Całkowity metraż jetek (m3)": 1,
+                "Całkowity koszt jetek (zł)": 150
+            },
+            "Kontrlaty i Łaty": {
+                "Długość kontrłat (m)": 10.0,
+                "Wymiary kontrłat (cm)": "5x5",
+                "Ilość kontrłat": 40,
+                "Całkowity metraż kontrłat (m3)": 1,
+                "Całkowity koszt kontrłat (zł)": 40,
+                "Szerokość połaci (m)": 31,
+                "Wymiary łat (cm)": "5x5",
+                "Całkowity metraż łat (m3)": 2,
+                "Całkowity koszt łat (zł)": 58
+            },
+            "Płatew i Słupy": null,
+            "Suma m3 zamowienia": 10,
+            "Cena": 1168
+        }
+    },
+    {
+        "imie": "Jan",
+        "nazwisko": "Tan",
+        "dojazd": {
+            "adres_dostawy": "pcim, małopolska",
+            "dystans": 17.9,
+            "koszt_paliwa": 17,
+            "zużycie_paliwa": 3
+        },
+        "zamowienie": {
+            "laczny_metraz": 20.0,
+            "laczna_cena": 3000.0,
+            "pozycje": [
+                {
+                    "typ": "Deska",
+                    "podkategoria": null,
+                    "gatunek": "Modrzew",
+                    "m3": 10.0,
+                    "dlugosc": 5.0,
+                    "cena_jednostkowa": 100,
+                    "cena_laczna": 1000.0,
+                    "wymiary_sztuki": "2.5"
+                },
+                {
+                    "typ": "Kantówka",
+                    "podkategoria": null,
+                    "gatunek": "Jodła",
+                    "m3": 10.0,
+                    "dlugosc": 6.0,
+                    "cena_jednostkowa": 200,
+                    "cena_laczna": 2000.0,
+                    "wymiary_sztuki": "10x10"
+                }
+            ]
+        }
+    },
+    {
+        "imie": "Jan",
+        "nazwisko": "Pan",
+        "dojazd": {
+            "adres_dostawy": "rondo grzegórzeckie, krakow",
+            "dystans": 62.2,
+            "koszt_paliwa": 57,
+            "zużycie_paliwa": 9
+        },
+        "zamowienie": {
+            "laczny_metraz": 10.0,
+            "laczna_cena": 300.0,
+            "pozycje": [
+                {
+                    "typ": "Łaty",
+                    "podkategoria": null,
+                    "gatunek": null,
+                    "m3": 10.0,
+                    "dlugosc": 5.0,
+                    "cena_jednostkowa": 30,
+                    "cena_laczna": 300.0,
+                    "wymiary_sztuki": "5x5"
+                }
+            ]
+        }
     }
-}
+]
