@@ -1,173 +1,55 @@
-import json
 import os
+import json
 
-def main():
-    print("POLMAR")
-    print("Dodawanie drewna do magazynu")
-    print("Wybierz opcję:")
-    print("1. Dodaj drewno do magazynu")
-    print("2. Sprawdź stan magazynu")
-    print("3. Usuń drewno z magazynu")
-    option = input("Wprowadź numer opcji: ")
-    czy_zakonczyc = "nie"   
-    while czy_zakonczyc != "tak":
-        if option == "1":
-            adding_material()
-        elif option == "2":
-            warehouse_status()
-        elif option == "3":
-            delete_material()
-        else:
-            print("Nieprawidłowa opcja. Proszę wybrać 1, 2 lub 3.")
-        czy_zakonczyc = input("Czy chcesz zakończyć operacje w magazynie? (tak/nie): ")
+class Warehouse:
+    def __init__(self, warehouse_file="warehouse.json"):
+        self.warehouse_file = warehouse_file
+        self.warehouse_data = self.load_warehouse_data()
+    
         
-    
-
-
-with open("prices.json", "r") as types_of_wood:
-    data = json.load(types_of_wood)
-
-def get_categories(prices): 
-    return list(prices.keys())
-
-def get_wood_types(prices, category, subcategory=None):
-    if subcategory is None:
-        return list(prices[category].keys())
-    else:
-        return list(prices[category][subcategory].keys())
-    
-def caltulate_m3(length, width, height):
-    return length * width * height
-
-def load_warehouse_data():
-    try:
-        with open("warehouse.json", "r") as warehouse_file:
-            return json.load(warehouse_file)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-
-def write_to_warehouse(type_of_wood,subcategory, wood_spiece, m3, length, piece_dimensions):
-    warehouse_data = load_warehouse_data()
-
-
-    new_entry={
-        "typ": type_of_wood,
-        "podkategoria": subcategory,
-        "gatunek": wood_spiece,
-        "m3": m3,
-        "dlugosc": length,
-        "wymiary_sztuki": piece_dimensions,
-    }
-    warehouse_data.append(new_entry)
-    with open("warehouse.json", "w") as warehouse_file:
-        json.dump(warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
-
-def adding_material():
-    print("Typy drewna:")
-
-    for i, category in enumerate(get_categories(data)):
-        print(f"{i + 1}. {category}")
-        if category == "Tarcica":
-            for j, subcategory in enumerate(get_categories(data[category])):
-                print(f"   {j + 1}. {subcategory}")
-
-    type_of_wood = input("Co chcesz dodać?: ")
-
-    if type_of_wood == "Tarcica":
-        subcategory = input("Podaj podkategorię: ")
-    else:
-        subcategory = None
-
-    for i, wood in enumerate(get_wood_types(data, type_of_wood, subcategory if type_of_wood == "Tarcica" else None)):
-        print(f"{i + 1}. {wood}")
-
-    wood_spiece = input("Podaj rodzaj drewna: ")
-    
-    lenght = float(input("Podaj długość (m): "))
-    width = float(input("Podaj szerokość (m): "))
-    height = float(input("Podaj wysokość (m): "))
-    m3 = caltulate_m3(lenght, width, height)
-    print(f"Objętość drewna: {m3} m³")
-    if type_of_wood == "Tarcica" or type_of_wood =="Deska":
-        piece_height = float(input("Podaj grubość sztuki (cm): "))
-        piece_dimensions = (f"{piece_height}")
-        print(f"Wymiary sztuki: {piece_dimensions} cm")
-    else:
-        piece_width = float(input("Podaj szerokość sztuki (cm): "))
-        piece_height = float(input("Podaj wysokość sztuki (cm): "))
-        piece_dimensions = (f"{piece_width}x{piece_height}")
-        print(f"Wymiary sztuki: {piece_dimensions} cm")
+    def load_warehouse_data(self):
+        try:
+            with open(self.warehouse_file, "r") as warehouse_file:
+                data = list(json.load(warehouse_file))
+        except FileNotFoundError:
+            data = []
+        return data
 
     
-    warehouse_data = load_warehouse_data()
 
-    for entry in warehouse_data:
-        if (
-            type_of_wood == entry["typ"]
-            and subcategory == entry["podkategoria"]
-            and wood_spiece == entry["gatunek"]
-            and lenght == entry["dlugosc"]
-            and piece_dimensions == entry["wymiary_sztuki"]
-        ):
-            entry["m3"] += m3
-            print(f"Zaktualizowana ilość drewna: {entry['m3']} m³")
+    def write_to_warehouse(self, category, subcategory, wood_specie, m3, length, piece_dimensions):
+        
+        for entry in self.warehouse_data:
+            if entry["typ"] == category and entry["podkategoria"] == subcategory and entry["gatunek"] == wood_specie and entry["dlugosc"] == length and entry["wymiary_sztuki"] == piece_dimensions:
+                entry["m3"] += m3
+                with open(self.warehouse_file, "w") as warehouse_file:
+                    json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                return
+            
+        new_entry = {
+            "id" : max([entry["id"] for entry in self.warehouse_data], default=0) + 1,
+            "typ": category,
+            "podkategoria": subcategory,
+            "gatunek": wood_specie,
+            "m3": m3,
+            "dlugosc": length,
+            "wymiary_sztuki": piece_dimensions
+        }
+        self.warehouse_data.append(new_entry)
+        with open(self.warehouse_file, "w") as warehouse_file:
+            json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
 
-            try:
-                with open("warehouse.json", "w") as warehouse_file:
-                    json.dump(warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
-            except Exception as e:
-                print(f"Wystąpił błąd podczas zapisywania danych: {e}")
-            return
-
-    try:
-        write_to_warehouse(type_of_wood, subcategory, wood_spiece, m3, lenght, piece_dimensions)
-    except Exception as e:
-        print(f"Wystąpił błąd podczas zapisywania danych: {e}")
-
-def warehouse_status():
-    try:
-        with open("warehouse.json", "r") as warehouse:
-            data = json.load(warehouse)
-    except FileNotFoundError:
-        print("Brak danych w magazynie.")
-        return[]
-    except json.JSONDecodeError:
-        print("Błąd odczytu danych magazynu.")
-        return[]   
     
-    print("Stan magazynu:")
-    print("")
-    for i, entry in enumerate(data):
-        podkategoria = f"{entry['podkategoria']}" if entry['podkategoria'] is not None else ""
-        print(f"{i + 1}. {entry['typ']} {podkategoria} - ({entry['gatunek']}) - {entry['m3']} m³, długość: {entry['dlugosc']} m, wymiary sztuki: {entry['wymiary_sztuki']} cm")
-        print("")
-
-def delete_material():
-    try:
-        with open("warehouse.json", "r") as warehouse:
-            data = json.load(warehouse)
-    except FileNotFoundError:
-        print("Brak danych w magazynie.")
-        return[]
-    except json.JSONDecodeError:
-        print("Błąd odczytu danych magazynu.")
-        return[]   
+    def delete_material(self, id_to_delete: int):
+        for entry in self.warehouse_data:
+            if entry["id"] == id_to_delete:
+                self.warehouse_data.remove(entry)
+                with open(self.warehouse_file, "w") as warehouse_file:
+                    json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                return True
+        return False
     
-    print("Stan magazynu:")
-    print("")
-    for i, entry in enumerate(data):
-        podkategoria = f"{entry['podkategoria']}" if entry['podkategoria'] is not None else ""
-        print(f"{i + 1}. {entry['typ']} {podkategoria} - ({entry['gatunek']}) - {entry['m3']} m³, długość: {entry['dlugosc']} m, wymiary sztuki: {entry['wymiary_sztuki']} cm")
-        print("")    
-    
-    delete =int(input("Podaj numer pozycji do usunięcia: "))
-    if 1 <= delete <= len(data):
-        del data[delete - 1]
-        print("Pozycja została usunięta.")
-        with open("warehouse.json", "w") as warehouse:
-            json.dump(data, warehouse, ensure_ascii=False, indent=4)    
-
 if __name__ == "__main__":
-    main()
-
-
+    warehouse = Warehouse()
+    warehouse.write_to_warehouse("Deska", None, "Modrzew", 5, 2.5, "2.5")
+    print(warehouse.warehouse_data)
