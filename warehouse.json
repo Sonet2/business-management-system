@@ -4,8 +4,17 @@
         "typ": "Deska",
         "podkategoria": null,
         "gatunek": "Modrzew",
-        "m3": 5,
+        "m3": 10,
         "dlugosc": 2.5,
+        "wymiary_sztuki": "2.5"
+    },
+    {
+        "id": 2,
+        "typ": "Tarcica",
+        "podkategoria": "Obrzynana",
+        "gatunek": "Modrzew",
+        "m3": 10.0,
+        "dlugosc": 10.0,
         "wymiary_sztuki": "2.5"
     }
 ]

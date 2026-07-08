@@ -15,11 +15,20 @@ class Wood_Catalog:
         return list(self.catalog.keys())
     
     def get_wood_subcategory(self,category):
-        return list(self.catalog[category].keys())
+        if category == "Tarcica":
+            return list(self.catalog[category].keys())
+        else:
+            return None
     
     def get_wood_specie(self, category, subcategory):
-        return list(self.catalog[category][subcategory].keys())
+        if subcategory is None:
+            return list(self.catalog[category].keys())
+        else:
+            return list(self.catalog[category][subcategory].keys())
     
     def get_wood_price(self, category, subcategory, specie):
-        return self.catalog[category][subcategory][specie]
+        if subcategory is None:
+            return self.catalog[category][specie]
+        else:
+            return self.catalog[category][subcategory][specie]
     
