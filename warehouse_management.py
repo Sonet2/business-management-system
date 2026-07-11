@@ -1,4 +1,3 @@
-import os
 import json
 
 class Warehouse:
@@ -13,6 +12,9 @@ class Warehouse:
                 data = list(json.load(warehouse_file))
         except FileNotFoundError:
             data = []
+        except json.JSONDecodeError:
+            print(f"Błąd dekodowania JSON w pliku {self.warehouse_file}. Inicjalizacja pustego magazynu.")
+            data = []
         return data
 
     
@@ -22,8 +24,11 @@ class Warehouse:
         for entry in self.warehouse_data:
             if entry["typ"] == category and entry["podkategoria"] == subcategory and entry["gatunek"] == wood_specie and entry["dlugosc"] == length and entry["wymiary_sztuki"] == piece_dimensions:
                 entry["m3"] += m3
-                with open(self.warehouse_file, "w") as warehouse_file:
-                    json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                try: 
+                    with open(self.warehouse_file, "w") as warehouse_file:
+                        json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                except OSError as e:
+                    print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")
                 return
             
         new_entry = {
@@ -36,17 +41,25 @@ class Warehouse:
             "wymiary_sztuki": piece_dimensions
         }
         self.warehouse_data.append(new_entry)
-        with open(self.warehouse_file, "w") as warehouse_file:
-            json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+        try: 
+            with open(self.warehouse_file, "w") as warehouse_file:
+                json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+        except OSError as e:
+            print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")
+        return
 
     
     def delete_material(self, id_to_delete: int):
         for entry in self.warehouse_data:
             if entry["id"] == id_to_delete:
                 self.warehouse_data.remove(entry)
-                with open(self.warehouse_file, "w") as warehouse_file:
-                    json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                try:
+                    with open(self.warehouse_file, "w") as warehouse_file:
+                        json.dump(self.warehouse_data, warehouse_file, ensure_ascii=False, indent=4)
+                except OSError as e:
+                    print(f"Wystąpił błąd podczas usuwania danych: {e}")
                 return True
+                
         return False
     
 if __name__ == "__main__":
