@@ -1,4 +1,4 @@
-import os, json
+import json
 class Wood_Catalog:
     def __init__(self, wood_catalog_file = "prices.json"):
         self.catalog = {}

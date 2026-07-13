@@ -1,4 +1,4 @@
-import material, warehouse_management_old, fuel_road
+import material_old, warehouse_management_old, fuel_road
 
 def main():
     print("Witaj w programie POLMAR!")
@@ -9,7 +9,7 @@ def main():
     while czy_zakonczyc != "tak":
         option = input("Wprowadź numer opcji: ")
         if option == "1":
-            material.main()
+            material_old.main()
             
         elif option == "2":
             warehouse_management_old.main()

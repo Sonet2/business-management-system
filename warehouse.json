@@ -16,5 +16,32 @@
         "m3": 10.0,
         "dlugosc": 10.0,
         "wymiary_sztuki": "2.5"
+    },
+    {
+        "id": 3,
+        "typ": "Deska",
+        "podkategoria": null,
+        "gatunek": "Sosna",
+        "m3": 20.0,
+        "dlugosc": 10.0,
+        "wymiary_sztuki": "2.5"
+    },
+    {
+        "id": 4,
+        "typ": "Kontrłaty",
+        "podkategoria": null,
+        "gatunek": null,
+        "m3": 10.0,
+        "dlugosc": 10.0,
+        "wymiary_sztuki": "2x2"
+    },
+    {
+        "id": 5,
+        "typ": "Deska",
+        "podkategoria": null,
+        "gatunek": "Świerk",
+        "m3": 2.0,
+        "dlugosc": 3.0,
+        "wymiary_sztuki": "2.5"
     }
 ]
