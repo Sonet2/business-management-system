@@ -20,13 +20,16 @@ class MaterialEntry:
             "dlugosc": self.length,
             "wymiary_sztuki": self.piece_dimensions
         }
+    def matches(self, category, subcategory, wood_specie, length, piece_dimensions):
+        if self.category == category and self.subcategory == subcategory and self.wood_specie == wood_specie and self.length == length and self.piece_dimensions == piece_dimensions:
+            return True
+        return False
 
 class Warehouse:
     def __init__(self, warehouse_file="warehouse.json"):
         self.warehouse_file = warehouse_file
         self.warehouse_data = self.load_warehouse_data()
-    
-        
+
     def load_warehouse_data(self):
         try:
             with open(self.warehouse_file, "r") as warehouse_file:
@@ -52,7 +55,7 @@ class Warehouse:
     def write_to_warehouse(self, category, subcategory, wood_specie, m3, length, piece_dimensions):
         
         for entry in self.warehouse_data:
-            if entry.category == category and entry.subcategory == subcategory and entry.wood_specie == wood_specie and entry.length == length and entry.piece_dimensions == piece_dimensions:
+            if entry.matches(category, subcategory, wood_specie, length, piece_dimensions):
                 entry.m3 += m3
                 self.save_data_check()
                 return
@@ -78,3 +81,12 @@ class Warehouse:
                 self.save_data_check()
                 return True    
         return False
+    
+    def display_warehouse(self):
+        for entry in self.warehouse_data:
+            print(f"ID: {entry.id}, Kategoria: {entry.category}, Podkategoria: {entry.subcategory}, Gatunek: {entry.wood_specie}, Ilość m3: {entry.m3}, Długość: {entry.length}, Wymiary sztuki: {entry.piece_dimensions}")
+    
+    def get_max_id(self):
+        if not self.warehouse_data:
+            return 0
+        return max(entry.id for entry in self.warehouse_data)

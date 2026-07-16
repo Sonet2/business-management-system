@@ -1,5 +1,5 @@
 import json
-class Wood_Catalog:
+class WoodCatalog:
     def __init__(self, wood_catalog_file = "prices.json"):
         self.catalog = {}
         self.load_catalog(wood_catalog_file)
