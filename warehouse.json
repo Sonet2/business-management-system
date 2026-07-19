@@ -36,12 +36,21 @@
         "wymiary_sztuki": "2x2"
     },
     {
-        "id": 5,
+        "id": 6,
+        "typ": "Deska",
+        "podkategoria": null,
+        "gatunek": "Dąb",
+        "m3": 10.0,
+        "dlugosc": 5.0,
+        "wymiary_sztuki": "2.5"
+    },
+    {
+        "id": 7,
         "typ": "Deska",
         "podkategoria": null,
         "gatunek": "Świerk",
-        "m3": 2.0,
-        "dlugosc": 3.0,
-        "wymiary_sztuki": "2.5"
+        "m3": 6.0,
+        "dlugosc": 7.0,
+        "wymiary_sztuki": "6.7"
     }
 ]

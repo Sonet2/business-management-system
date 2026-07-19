@@ -18,7 +18,7 @@ class WoodCatalog:
         if category == "Tarcica":
             return list(self.catalog[category].keys())
         else:
-            return None
+            return []   
     
     def get_wood_specie(self, category, subcategory):
         if subcategory is None:

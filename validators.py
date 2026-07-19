@@ -14,7 +14,12 @@ class Validator:
             except ValueError:
                 print(f"Niepoprawny typ danych")
 
-    
+    def select_option_from_list(self, options: list[str], qst: str) -> str:
+        for i, option in enumerate(options, start=1):
+            print(f"{i}. {option}")
+
+        choice = self.get_valid_number(qst, int, 1, len(options))
+        return options[choice - 1]
     
         
     

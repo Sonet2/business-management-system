@@ -90,3 +90,46 @@ class Warehouse:
         if not self.warehouse_data:
             return 0
         return max(entry.id for entry in self.warehouse_data)
+    
+
+
+class WarehouseManager:
+    def __init__(self, catalog, validator, warehouse):
+        self.catalog = catalog
+        self.validator = validator
+        self.warehouse = warehouse
+    
+    def add_to_warehouse(self):
+        category = self.validator.select_option_from_list(self.catalog.get_wood_category(), "Wybierz kategorię drewna: ")
+        subcategory_options = self.catalog.get_wood_subcategory(category)
+        if not subcategory_options:
+            subcategory = None
+        else:
+            subcategory = self.validator.select_option_from_list(subcategory_options, "Wybierz podkategorię drewna: ")
+        
+        if category == "Łaty" or category == "Kontrłaty":
+            wood_specie = None
+        else:
+            wood_specie = self.validator.select_option_from_list(self.catalog.get_wood_specie(category, subcategory), "Wybierz gatunek drewna: ")
+        
+        m3 = self.validator.get_valid_number("Wprowadź ilość w m3: ", float, 0.0001)
+
+        length = self.validator.get_valid_number("Wprowadź długość drewna: ", float, 0.0001)
+
+        piece_dimensions = input("Wprowadź wymiary sztuki: ")        
+        while not piece_dimensions:            
+            print("Wymiary sztuki nie mogą być puste.")            
+            piece_dimensions = input("Wprowadź wymiary sztuki: ")
+
+        self.warehouse.write_to_warehouse(category, subcategory, wood_specie, m3, length, piece_dimensions)
+    
+   
+    def delete_from_warehouse(self):
+        self.warehouse.display_warehouse()
+        
+        id_to_delete = self.validator.get_valid_number("Wprowadź ID materiału do usunięcia: ", int, 1, self.warehouse.get_max_id())
+        
+        if self.warehouse.delete_material(id_to_delete):
+            print(f"Materiał o ID {id_to_delete} został usunięty.")
+        else:
+            print(f"Nie znaleziono materiału o ID {id_to_delete}.")
