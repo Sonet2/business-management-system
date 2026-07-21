@@ -1,4 +1,4 @@
-import fuel_road, material_old, truss
+import fuel_road
 import json
 import os
 from dotenv import load_dotenv
@@ -84,7 +84,7 @@ def main():
         else:
             route_info = fuel_road.calculate_fuel_cost(origin_coords, destination_coords, destination)
 
-        full_order_info = truss.main()
+        full_order_info = truss_old.main()
         
 
         order_summary = {

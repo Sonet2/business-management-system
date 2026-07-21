@@ -1,4 +1,6 @@
-class Material:
+import json
+
+class LooseMaterialMaterial:
     def __init__(self, category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions):
         self.category = category
         self.subcategory = subcategory
@@ -23,8 +25,18 @@ class Material:
             "wymiary_sztuki": self.piece_dimensions,
             "cena_laczna" : self.total_price
         }
+    @classmethod
+    def from_dict(cls, data):
+        category = data.get("typ")
+        subcategory = data.get("podkategoria")
+        wood_specie = data.get("gatunek")
+        m3 = data.get("m3")
+        price_per_m3 = data.get("cena_za_m3")
+        length = data.get("dlugosc")
+        piece_dimensions = data.get("wymiary_sztuki")
+        return cls(category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions)
 
-class LooseMaterialOrder:
+class LooseMaterial:
     def __init__(self):
         self.entries = []
     @property
@@ -35,14 +47,52 @@ class LooseMaterialOrder:
         return sum(entry.m3 for entry in self.entries)
     
     def add_entry(self, category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions):
-        entry = Material(category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions)
+        entry = LooseMaterialMaterial(category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions)
         self.entries.append(entry)
     def to_dict(self):
         return {
-            "laczny_metraz": self.total_m3,
-            "laczna_cena": self.total_price,
-            "pozycje": [entry.to_dict() for entry in self.entries]
+            "pozycje": [entry.to_dict() for entry in self.entries],
+            "calkowity_metraz_zamowienia": self.total_m3,
+            "calkowita_cena_zamowienia": self.total_price
         }
+    @classmethod
+    def from_dict(cls, data):
+        instance = cls()
+        for entry_data in data.get("pozycje", []):
+            entry = LooseMaterialMaterial.from_dict(entry_data)
+            instance.entries.append(entry)
+        return instance
+    
+class LooseMaterialOrder:
+    def __init__(self, order_file = "loose_material_orders.json"):
+        self.order_file = order_file
+        self.orders = self.load_orders()
+    
+    def load_orders(self):
+        try:
+            with open(self.order_file, "r", encoding="utf-8") as file:
+                orders = json.load(file)
+                entries = []
+                for raw_order in orders:
+                    order = LooseMaterial.from_dict(raw_order)
+                    entries.append(order)
+        except FileNotFoundError:
+            entries = []
+        except json.JSONDecodeError:
+            print("Błąd dekodowania pliku JSON. Plik może być uszkodzony.")
+            entries = []
+        return entries
+    
+    def save_orders(self):
+        try:
+            with open(self.order_file, "w", encoding="utf-8") as order_file:
+                json.dump([order.to_dict() for order in self.orders], order_file, ensure_ascii=False, indent=4)
+        except OSError as e:
+            print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")
+
+    def add_order(self, loose_material: LooseMaterial):
+        self.orders.append(loose_material)
+        self.save_orders()
 
 class LooseMaterialManager:
     def __init__(self, catalog, validator):
@@ -50,7 +100,7 @@ class LooseMaterialManager:
         self.validator = validator
 
     def collect_order(self):
-        order = LooseMaterialOrder()
+        order = LooseMaterial()
         while True:
             category = self.validator.select_option_from_list(self.catalog.get_wood_category(), "Wybierz kategorię drewna: ")
             subcategory_options = self.catalog.get_wood_subcategory(category)
@@ -81,4 +131,4 @@ class LooseMaterialManager:
             if continue_order != "tak":
                 break
 
-        return order.to_dict()
+        return order

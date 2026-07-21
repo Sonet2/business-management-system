@@ -20,6 +20,17 @@ class Validator:
 
         choice = self.get_valid_number(qst, int, 1, len(options))
         return options[choice - 1]
+
+    def get_positive_float(self, prompt: str) -> float:
+        while True:
+            try:
+                value = float(input(prompt))
+                if value > 0:
+                    return value
+                else:
+                    print("Wartość musi być większa od zera. Spróbuj ponownie.")
+            except ValueError:
+                print("Nieprawidłowa wartość. Spróbuj ponownie.")
     
         
     
