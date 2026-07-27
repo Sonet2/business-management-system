@@ -1,4 +1,5 @@
-import json
+from base_repository import BaseOrderRepository
+from order import OrderBlueprint
 
 class LooseMaterialMaterial:
     def __init__(self, category, subcategory, wood_specie, m3, price_per_m3, length, piece_dimensions):
@@ -62,37 +63,13 @@ class LooseMaterial:
             entry = LooseMaterialMaterial.from_dict(entry_data)
             instance.entries.append(entry)
         return instance
-    
-class LooseMaterialOrder:
-    def __init__(self, order_file = "loose_material_orders.json"):
-        self.order_file = order_file
-        self.orders = self.load_orders()
-    
-    def load_orders(self):
-        try:
-            with open(self.order_file, "r", encoding="utf-8") as file:
-                orders = json.load(file)
-                entries = []
-                for raw_order in orders:
-                    order = LooseMaterial.from_dict(raw_order)
-                    entries.append(order)
-        except FileNotFoundError:
-            entries = []
-        except json.JSONDecodeError:
-            print("Błąd dekodowania pliku JSON. Plik może być uszkodzony.")
-            entries = []
-        return entries
-    
-    def save_orders(self):
-        try:
-            with open(self.order_file, "w", encoding="utf-8") as order_file:
-                json.dump([order.to_dict() for order in self.orders], order_file, ensure_ascii=False, indent=4)
-        except OSError as e:
-            print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")
 
-    def add_order(self, loose_material: LooseMaterial):
-        self.orders.append(loose_material)
-        self.save_orders()
+class LooseMaterialOrderBlueprint(OrderBlueprint):
+    material_class = LooseMaterial
+
+class LooseMaterialOrder(BaseOrderRepository):
+    def __init__(self, order_file = "loose_material_orders.json"):
+        super().__init__(order_file, LooseMaterialOrderBlueprint)
 
 class LooseMaterialManager:
     def __init__(self, catalog, validator):

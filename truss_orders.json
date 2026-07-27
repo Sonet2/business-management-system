@@ -1,0 +1,74 @@
+[
+    {
+        "imie": "Anna",
+        "nazwisko": "Kowalska",
+        "informacje_o_drodze": {
+            "adres_dostawy": "Wadowice",
+            "dystans": 67.3,
+            "koszt_paliwa": 62,
+            "zużycie_paliwa": 10
+        },
+        "dane_materialu": {
+            "rozstaw_krokwi": 40.0,
+            "krokiew": {
+                "nazwa": "Krokiew",
+                "gatunek": "Modrzew",
+                "dlugosc": 10.0,
+                "wysokosc": 10.0,
+                "szerokosc": 10.0,
+                "ilosc": 80,
+                "cena_za_m3": 150,
+                "calkowity_metraz_materialu": 8.0,
+                "cena_calkowita_materialu": 1200.0
+            },
+            "murlata": {
+                "nazwa": "Murlata",
+                "gatunek": "Modrzew",
+                "dlugosc": 20.0,
+                "wysokosc": 20.0,
+                "szerokosc": 20.0,
+                "ilosc": 2,
+                "cena_za_m3": 200,
+                "calkowity_metraz_materialu": 1.6,
+                "cena_calkowita_materialu": 320.0
+            },
+            "jetka": {
+                "nazwa": "Jetka",
+                "gatunek": "Modrzew",
+                "dlugosc": 5.0,
+                "wysokosc": 10.0,
+                "szerokosc": 10.0,
+                "ilosc": 40,
+                "cena_za_m3": 150,
+                "calkowity_metraz_materialu": 2.0,
+                "cena_calkowita_materialu": 300.0
+            },
+            "laty": {
+                "nazwa": "Łaty",
+                "gatunek": null,
+                "dlugosc": 32,
+                "wysokosc": 5.0,
+                "szerokosc": 5.0,
+                "ilosc": 25,
+                "cena_za_m3": 30,
+                "calkowity_metraz_materialu": 2.0000000000000004,
+                "cena_calkowita_materialu": 60.000000000000014
+            },
+            "kontrlaty": {
+                "nazwa": "Kontrłaty",
+                "gatunek": null,
+                "dlugosc": 10.0,
+                "wysokosc": 5.0,
+                "szerokosc": 5.0,
+                "ilosc": 80,
+                "cena_za_m3": 40,
+                "calkowity_metraz_materialu": 2.0,
+                "cena_calkowita_materialu": 80.0
+            },
+            "platew": null,
+            "slup": null,
+            "calkowity_metraz_zamowienia": 15.6,
+            "calkowita_cena_zamowienia": 1960.0
+        }
+    }
+]

@@ -6,12 +6,15 @@ load_dotenv()
 
 class Fuel:
     
-    def __init__(self, diesel_price = 6.50, ors_api_key = None, avg_fuel_per_100 = 14):
+    def __init__(self, diesel_price = 6.50, ors_api_key = None, avg_fuel_per_100 = 14, origin_address = None):
         self.diesel_price = diesel_price
         self.ors_api_key = ors_api_key or os.getenv("ORS_API_KEY")
         self.avg_fuel_per_100 = avg_fuel_per_100
+        self.origin_address = origin_address or os.getenv("START_ADDRESS")
 
     def geocode_location(self, address):
+        if address is None or address.strip() == "":
+            return None
         url = "https://api.openrouteservice.org/geocode/search"
         params={
             "api_key": self.ors_api_key,
@@ -59,3 +62,10 @@ class Fuel:
                 "zużycie_paliwa": math.ceil(fuel_consumed)
             }
             return fuel_info
+    def get_route_info(self, destination_address):
+        origin_coords = self.geocode_location(self.origin_address)
+        destination_coords = self.geocode_location(destination_address)
+        if origin_coords is None or destination_coords is None:
+            return None
+        route_info = self.calculate_fuel_cost(origin_coords, destination_coords, destination_address)
+        return route_info

@@ -1,0 +1,38 @@
+[
+    {
+        "imie": "Jan",
+        "nazwisko": "Kowal",
+        "informacje_o_drodze": {
+            "adres_dostawy": "Rondo Matecznego, Kraków",
+            "dystans": 57.3,
+            "koszt_paliwa": 53,
+            "zużycie_paliwa": 9
+        },
+        "dane_materialu": {
+            "pozycje": [
+                {
+                    "typ": "Deska",
+                    "podkategoria": null,
+                    "gatunek": "Sosna",
+                    "m3": 10.0,
+                    "cena_za_m3": 80,
+                    "dlugosc": 5.0,
+                    "wymiary_sztuki": "2.5",
+                    "cena_laczna": 800.0
+                },
+                {
+                    "typ": "Kantówka",
+                    "podkategoria": null,
+                    "gatunek": "Świerk",
+                    "m3": 10.0,
+                    "cena_za_m3": 100,
+                    "dlugosc": 7.0,
+                    "wymiary_sztuki": "10x10",
+                    "cena_laczna": 1000.0
+                }
+            ],
+            "calkowity_metraz_zamowienia": 20.0,
+            "calkowita_cena_zamowienia": 1800.0
+        }
+    }
+]

@@ -32,7 +32,7 @@ class Warehouse:
 
     def load_warehouse_data(self):
         try:
-            with open(self.warehouse_file, "r") as warehouse_file:
+            with open(self.warehouse_file, "r", encoding="utf-8") as warehouse_file:
                 data = list(json.load(warehouse_file))
                 entries = []
                 for raw_entry in data:
@@ -47,7 +47,7 @@ class Warehouse:
 
     def save_data_check(self):
         try:
-            with open(self.warehouse_file, "w") as warehouse_file:
+            with open(self.warehouse_file, "w", encoding="utf-8") as warehouse_file:
                 json.dump([entry.to_dict() for entry in self.warehouse_data], warehouse_file, ensure_ascii=False, indent=4)
         except OSError as e:
             print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")

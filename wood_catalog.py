@@ -6,7 +6,7 @@ class WoodCatalog:
 
     def load_catalog(self, wood_catalog_file):
         try: 
-            with open(wood_catalog_file, "r") as wood_catalog:
+            with open(wood_catalog_file, "r", encoding="utf-8") as wood_catalog:
                 self.catalog = json.load(wood_catalog)
         except (FileNotFoundError, json.JSONDecodeError):
             self.catalog = {}
@@ -27,8 +27,11 @@ class WoodCatalog:
             return list(self.catalog[category][subcategory].keys())
     
     def get_wood_price(self, category, subcategory, specie):
-        if subcategory is None:
-            return self.catalog[category][specie]
+        if not isinstance(self.catalog[category], dict):
+            return self.catalog[category]
         else:
-            return self.catalog[category][subcategory][specie]
+            if subcategory is None:
+                return self.catalog[category][specie]
+            else:
+                return self.catalog[category][subcategory][specie]
     
