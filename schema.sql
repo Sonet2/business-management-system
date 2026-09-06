@@ -19,3 +19,28 @@ length REAL NOT NULL CHECK(length >0),
  FOREIGN KEY (wood_type_id)
  REFERENCES wood_types(id)
  ON DELETE RESTRICT);
+
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE customers (
+    id INTEGER PRIMARY KEY,
+    customer_type TEXT NOT NULL
+        CHECK (customer_type IN ('PERSON', 'COMPANY')),
+    first_name TEXT,
+    last_name TEXT,
+    company_name TEXT,
+    nip TEXT UNIQUE,
+    phone TEXT,
+    email TEXT
+);
+
+CREATE TABLE delivery_locations (
+    id INTEGER PRIMARY KEY,
+    customer_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    address TEXT NOT NULL,
+
+    FOREIGN KEY (customer_id)
+        REFERENCES customers(id)
+        ON DELETE RESTRICT
+);
