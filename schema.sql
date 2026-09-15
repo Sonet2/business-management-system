@@ -45,3 +45,25 @@ length REAL NOT NULL CHECK(length >0),
  FOREIGN KEY (material_id)
  REFERENCES materials(id)
  ON DELETE RESTRICT);
+CREATE TABLE orders(
+id INTEGER NOT NULL PRIMARY KEY ,
+customer_id INTEGER NOT NULL,
+delivery_location_id INTEGER NOT NULL,
+order_type TEXT NOT NULL CHECK (order_type IN ('TRUSS', 'LOOSE')),
+total_order_price_grosze INTEGER NOT NULL DEFAULT 0
+CHECK (total_order_price_grosze >= 0),
+total_m3 REAL NOT NULL DEFAULT 0 CHECK (total_m3  >= 0),
+FOREIGN KEY (customer_id) REFERENCES customers(id),
+FOREIGN KEY (delivery_location_id) REFERENCES delivery_locations(id));
+CREATE TABLE order_items(
+id INTEGER NOT NULL PRIMARY KEY ,
+order_id INTEGER NOT NULL,
+material_id INTEGER NOT NULL,
+m3_quantity REAL NOT NULL CHECK (m3_quantity > 0),
+length REAL NOT NULL CHECK (length > 0),
+dimensions TEXT NOT NULL,
+line_total_grosze INTEGER NOT NULL 
+CHECK (line_total_grosze >= 0),
+FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+FOREIGN KEY (material_id) REFERENCES materials(id) ON DELETE RESTRICT
+);
