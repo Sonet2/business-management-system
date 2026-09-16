@@ -221,3 +221,8 @@ __marimo__/
 
 # Photos
 *.png
+
+
+*.db
+*.db-wal
+*.db-shm
