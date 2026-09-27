@@ -5,9 +5,10 @@ from loose_material import LooseMaterialManager, LooseMaterialOrder
 from order import OrderManager
 from truss import TrussManager, TrussOrder
 from fuel import Fuel
+from database import Database
 
 class Menu:
-    def __init__(self, catalog, warehouse, warehouse_manager, validator, loose_material_manager, truss_manager, fuel, order_manager, truss_repository, loose_material_repository):
+    def __init__(self, catalog, warehouse, warehouse_manager, validator, loose_material_manager, truss_manager, fuel, order_manager, truss_repository, loose_material_repository, database):
         self.catalog = catalog
         self.warehouse = warehouse
         self.warehouse_manager = warehouse_manager
@@ -18,6 +19,7 @@ class Menu:
         self.order_manager = order_manager
         self.truss_repository = truss_repository
         self.loose_material_repository = loose_material_repository
+        self.database = database
 
     def display_menu(self):
         print("Wybierz opcję:")
@@ -84,18 +86,21 @@ class Menu:
                 print("Nieprawidłowa opcja. Spróbuj ponownie.")
 
 if __name__ == "__main__":
-    catalog = WoodCatalog()
-    warehouse = Warehouse()
+    database = Database(None)
+    connection = database.connect()
+    catalog = WoodCatalog(connection)
+    warehouse = Warehouse(connection)
     validator = Validator()
     fuel = Fuel()
     warehouse_manager = WarehouseManager(catalog, validator, warehouse)
     loose_material_manager = LooseMaterialManager(catalog, validator)
     truss_manager = TrussManager(validator, catalog)
     order_manager = OrderManager(fuel)
-    truss_repository = TrussOrder()
-    loose_material_repository = LooseMaterialOrder()
+    truss_repository = TrussOrder(connection)
+    loose_material_repository = LooseMaterialOrder(connection)
 
-    menu = Menu(catalog, warehouse, warehouse_manager, validator, loose_material_manager, truss_manager, fuel, order_manager, truss_repository, loose_material_repository)
+
+    menu = Menu(catalog, warehouse, warehouse_manager, validator, loose_material_manager, truss_manager, fuel, order_manager, truss_repository, loose_material_repository, database)
     while True:
         output = menu.display_menu()
         menu.get_user_choice(output)

@@ -1,37 +1,74 @@
-import json
 class WoodCatalog:
-    def __init__(self, wood_catalog_file = "prices.json"):
-        self.catalog = {}
-        self.load_catalog(wood_catalog_file)
+    def __init__(self, connection):
+        self.connection = connection
 
-    def load_catalog(self, wood_catalog_file):
-        try: 
-            with open(wood_catalog_file, "r", encoding="utf-8") as wood_catalog:
-                self.catalog = json.load(wood_catalog)
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.catalog = {}
 
-    def get_wood_category(self):
-        return list(self.catalog.keys())
+    def _fetch_flat_list(self, query, params=()):
+        rows = self.connection.execute(query,params).fetchall()
+        return[row[0] for row in rows]
+    
+    def get_wood_category(self) -> list:
+        results = self._fetch_flat_list("SELECT DISTINCT category FROM materials")
+        return results
     
     def get_wood_subcategory(self,category):
-        if category == "Tarcica":
-            return list(self.catalog[category].keys())
-        else:
-            return []   
-    
+        results = self._fetch_flat_list("SELECT DISTINCT subcategory FROM materials WHERE category = ?",(category,))
+
+        if results == [None]:
+            return None
+        return results
+            
+        
     def get_wood_specie(self, category, subcategory):
         if subcategory is None:
-            return list(self.catalog[category].keys())
+            check_query = "SELECT DISTINCT wood_species_id FROM materials WHERE category = ? AND subcategory IS NULL"
+            check_params = (category,)
         else:
-            return list(self.catalog[category][subcategory].keys())
-    
-    def get_wood_price(self, category, subcategory, specie):
-        if not isinstance(self.catalog[category], dict):
-            return self.catalog[category]
+            check_query = "SELECT DISTINCT wood_species_id FROM materials WHERE category = ? AND subcategory = ?"
+            check_params = (category, subcategory)
+
+        ids = self._fetch_flat_list(check_query, check_params)
+
+        if ids == [None]:
+            return None
+        if not ids:
+            return []
+
+        if subcategory is None:
+            query = (
+                "SELECT DISTINCT wood_species.name FROM materials "
+                "INNER JOIN wood_species ON materials.wood_species_id = wood_species.id "
+                "WHERE category = ? AND subcategory IS NULL"
+            )
+            params = (category,)
         else:
-            if subcategory is None:
-                return self.catalog[category][specie]
-            else:
-                return self.catalog[category][subcategory][specie]
-    
+            query = (
+                "SELECT DISTINCT wood_species.name FROM materials "
+                "INNER JOIN wood_species ON materials.wood_species_id = wood_species.id "
+                "WHERE category = ? AND subcategory = ?"
+            )
+            params = (category, subcategory)
+        return self._fetch_flat_list(query, params)
+        
+    def get_wood_price(self, category, subcategory, wood_specie):
+        conditions = ["materials.category = ?"]
+        params = [category]
+
+        if subcategory is None:
+            conditions.append("materials.subcategory IS NULL")
+        else:
+            conditions.append("materials.subcategory = ?")
+            params.append(subcategory)
+
+        if wood_specie is None:
+            conditions.append("materials.wood_species_id IS NULL")
+        else:
+            conditions.append("wood_species.name = ?")
+            params.append(wood_specie)
+
+        query = (
+            "SELECT price_per_m3_grosze FROM materials "
+            "LEFT JOIN wood_species ON materials.wood_species_id = wood_species.id "
+            "WHERE " + " AND ".join(conditions)
+        )
+        return self._fetch_flat_list(query, tuple(params))
