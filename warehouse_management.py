@@ -1,96 +1,52 @@
-import json
-
-class MaterialEntry:
-    def __init__(self, id, category, subcategory, wood_specie, m3, length, piece_dimensions):
-        self.id = id
-        self.category = category
-        self.subcategory = subcategory
-        self.wood_specie = wood_specie
-        self.m3 = m3
-        self.length = length
-        self.piece_dimensions = piece_dimensions
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "typ": self.category,
-            "podkategoria": self.subcategory,
-            "gatunek": self.wood_specie,
-            "m3": self.m3,
-            "dlugosc": self.length,
-            "wymiary_sztuki": self.piece_dimensions
-        }
-    def matches(self, category, subcategory, wood_specie, length, piece_dimensions):
-        if self.category == category and self.subcategory == subcategory and self.wood_specie == wood_specie and self.length == length and self.piece_dimensions == piece_dimensions:
-            return True
-        return False
+from database import Database 
+from wood_catalog import WoodCatalog
 
 class Warehouse:
-    def __init__(self, warehouse_file="warehouse.json"):
-        self.warehouse_file = warehouse_file
-        self.warehouse_data = self.load_warehouse_data()
+    def __init__(self, connection, catalog):
+        self.connection = connection
+        self.catalog = catalog
 
-    def load_warehouse_data(self):
-        try:
-            with open(self.warehouse_file, "r", encoding="utf-8") as warehouse_file:
-                data = list(json.load(warehouse_file))
-                entries = []
-                for raw_entry in data:
-                    entry = MaterialEntry(raw_entry["id"], raw_entry["typ"], raw_entry["podkategoria"], raw_entry["gatunek"], raw_entry["m3"], raw_entry["dlugosc"], raw_entry["wymiary_sztuki"])
-                    entries.append(entry)
-        except FileNotFoundError:
-            entries = []
-        except json.JSONDecodeError:
-            print(f"Błąd dekodowania JSON w pliku {self.warehouse_file}. Inicjalizacja pustego magazynu.")
-            entries = []
-        return entries
+    def _fetch_flat_list(self, query, params=()):
+            rows = self.connection.execute(query,params).fetchall()
+            return[row[0] for row in rows]
+    
+    
+    def write_to_warehouse(self, category, subcategory, wood_specie, m3, dimensions, length):
+        material_id = self.catalog.get_position_id(category, subcategory, wood_specie)
 
-    def save_data_check(self):
-        try:
-            with open(self.warehouse_file, "w", encoding="utf-8") as warehouse_file:
-                json.dump([entry.to_dict() for entry in self.warehouse_data], warehouse_file, ensure_ascii=False, indent=4)
-        except OSError as e:
-            print(f"Wystąpił błąd podczas zapisywania danych do pliku: {e}")
-
-    def write_to_warehouse(self, category, subcategory, wood_specie, m3, length, piece_dimensions):
+        if not material_id or material_id == [None]:
+            print("Nie znaleziono materiału w katalogu drewna.")
+            return
         
-        for entry in self.warehouse_data:
-            if entry.matches(category, subcategory, wood_specie, length, piece_dimensions):
-                entry.m3 += m3
-                self.save_data_check()
-                return
-            
-        new_entry = MaterialEntry(
-            id=max([e.id for e in self.warehouse_data], default=0) + 1,
-            category = category,
-            subcategory = subcategory,
-            wood_specie = wood_specie,
-            m3 = m3,
-            length = length,
-            piece_dimensions = piece_dimensions
-        )
-        self.warehouse_data.append(new_entry)
-        self.save_data_check()
-        return
+        
+        result = self.connection.execute("""
+            INSERT INTO warehouse (material_id, m3_quantity, dimensions, length)
+            VALUES (?, ?, ?, ?)
+        """, (material_id[0], m3, dimensions, length))
+
+        self.connection.commit()
+
+        if result.rowcount > 0:
+            print("Materiał został dodany do magazynu.")
 
     
     def delete_material(self, id_to_delete: int):
-        for entry in self.warehouse_data:
-            if entry.id == id_to_delete:
-                self.warehouse_data.remove(entry)
-                self.save_data_check()
-                return True    
-        return False
-    
+        result = self.connection.execute("DELETE FROM warehouse WHERE id = ?", (id_to_delete,))
+        self.connection.commit()
+        if result.rowcount > 0:
+            return True
+        else:
+            return False
+
     def display_warehouse(self):
-        for entry in self.warehouse_data:
-            print(f"ID: {entry.id}, Kategoria: {entry.category}, Podkategoria: {entry.subcategory}, Gatunek: {entry.wood_specie}, Ilość m3: {entry.m3}, Długość: {entry.length}, Wymiary sztuki: {entry.piece_dimensions}")
-    
-    def get_max_id(self):
-        if not self.warehouse_data:
-            return 0
-        return max(entry.id for entry in self.warehouse_data)
-    
+        results = self.connection.execute("SELECT warehouse.id, materials.category, materials.subcategory, wood_species.name, m3_quantity, dimensions, length FROM warehouse INNER JOIN materials ON warehouse.material_id = materials.id LEFT JOIN wood_species ON materials.wood_species_id = wood_species.id")
+        for entry in results:
+            if entry[2] is None:
+                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: brak, Gatunek: {entry[3]}, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}")
+            elif entry[3] is None:
+                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: brak, Gatunek: brak, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}")
+            else:
+                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: {entry[2]}, Gatunek: {entry[3]}, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}") 
 
 
 class WarehouseManager:
@@ -102,32 +58,38 @@ class WarehouseManager:
     def add_to_warehouse(self):
         category = self.validator.select_option_from_list(self.catalog.get_wood_category(), "Wybierz kategorię drewna: ")
         subcategory_options = self.catalog.get_wood_subcategory(category)
-        if not subcategory_options:
+        if subcategory_options is None:
             subcategory = None
+        elif not subcategory_options:
+            raise Exception(f"Błąd: Brak podkategorii dla wybranej kategorii: {category}")
         else:
             subcategory = self.validator.select_option_from_list(subcategory_options, "Wybierz podkategorię drewna: ")
-        
-        if category == "Łaty" or category == "Kontrłaty":
+
+        wood_specie_options = self.catalog.get_wood_specie(category, subcategory)
+        if wood_specie_options is None:
             wood_specie = None
+        elif not wood_specie_options:
+            raise Exception(f"Błąd: Brak gatunku drewna dla wybranej kategorii: {category} i podkategorii: {subcategory}")
         else:
-            wood_specie = self.validator.select_option_from_list(self.catalog.get_wood_specie(category, subcategory), "Wybierz gatunek drewna: ")
-        
+            wood_specie = self.validator.select_option_from_list(wood_specie_options, "Wybierz gatunek drewna: ")
+            
+            
         m3 = self.validator.get_valid_number("Wprowadź ilość w m3: ", float, 0.0001)
+
+        dimensions = input("Wprowadź wymiary sztuki: ")        
+        while not dimensions:            
+            print("Wymiary sztuki nie mogą być puste.")            
+            dimensions = input("Wprowadź wymiary sztuki: ")
 
         length = self.validator.get_valid_number("Wprowadź długość drewna: ", float, 0.0001)
 
-        piece_dimensions = input("Wprowadź wymiary sztuki: ")        
-        while not piece_dimensions:            
-            print("Wymiary sztuki nie mogą być puste.")            
-            piece_dimensions = input("Wprowadź wymiary sztuki: ")
-
-        self.warehouse.write_to_warehouse(category, subcategory, wood_specie, m3, length, piece_dimensions)
+        self.warehouse.write_to_warehouse(category, subcategory, wood_specie, m3, dimensions, length)
     
-   
+
     def delete_from_warehouse(self):
         self.warehouse.display_warehouse()
-        
-        id_to_delete = self.validator.get_valid_number("Wprowadź ID materiału do usunięcia: ", int, 1, self.warehouse.get_max_id())
+            
+        id_to_delete = self.validator.get_valid_number("Wprowadź ID materiału do usunięcia: ", int, 1)
         
         if self.warehouse.delete_material(id_to_delete):
             print(f"Materiał o ID {id_to_delete} został usunięty.")

@@ -72,3 +72,26 @@ class WoodCatalog:
             "WHERE " + " AND ".join(conditions)
         )
         return self._fetch_flat_list(query, tuple(params))
+
+    def get_position_id(self, category, subcategory, wood_specie):
+        conditions = ["materials.category = ?"]
+        params = [category]
+
+        if subcategory is None:
+            conditions.append("materials.subcategory IS NULL")
+        else:
+            conditions.append("materials.subcategory = ?")
+            params.append(subcategory)
+
+        if wood_specie is None:
+            conditions.append("materials.wood_species_id IS NULL")
+        else:
+            conditions.append("wood_species.name = ?")
+            params.append(wood_specie)
+
+        query = (
+            "SELECT materials.id FROM materials "
+            "LEFT JOIN wood_species ON materials.wood_species_id = wood_species.id "
+            "WHERE " + " AND ".join(conditions)
+        )
+        return self._fetch_flat_list(query, tuple(params))

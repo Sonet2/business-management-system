@@ -19,4 +19,4 @@ class Database:
         if self.sqlconn is not None:
             self.sqlconn.close()
             self.sqlconn = None
-        
+    
