@@ -1,3 +1,4 @@
+CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE customers (
     id INTEGER PRIMARY KEY,
     customer_type TEXT NOT NULL
@@ -47,14 +48,6 @@ CHECK (line_total_grosze >= 0),
 FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
 FOREIGN KEY (material_id) REFERENCES materials(id) ON DELETE RESTRICT
 );
-CREATE TABLE "delivery_locations" (
-	"id"	INTEGER,
-	"customer_id"	INTEGER NOT NULL,
-	"name"	TEXT NOT NULL,
-	"address"	TEXT NOT NULL,
-	PRIMARY KEY("id"),
-	FOREIGN KEY("customer_id") REFERENCES "customers"("id") ON DELETE RESTRICT
-);
 CREATE TABLE "orders" (
 	"id"	INTEGER NOT NULL,
 	"customer_id"	INTEGER NOT NULL,
@@ -70,5 +63,12 @@ CREATE TABLE "orders" (
 	"fuel_consumption"	REAL,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("customer_id") REFERENCES "customers"("id"),
-	FOREIGN KEY("delivery_location_id") REFERENCES "delivery_locations"("id")
+	FOREIGN KEY("delivery_location_id") REFERENCES "delivery_locations_old"("id")
+);
+CREATE TABLE delivery_locations (
+    id INTEGER PRIMARY KEY,
+    customer_id INTEGER NOT NULL,
+    name TEXT,
+    address TEXT,
+    FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE CASCADE
 );
