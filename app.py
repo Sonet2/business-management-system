@@ -1,10 +1,6 @@
 from warehouse_management import WarehouseManager, Warehouse
 from wood_catalog import WoodCatalog
 from validators import Validator
-from loose_material import LooseMaterialManager, LooseMaterialOrder
-from order import OrderManager
-from truss import TrussManager, TrussOrder
-from fuel import Fuel
 from database import Database
 
 class Menu:
@@ -91,13 +87,7 @@ if __name__ == "__main__":
     catalog = WoodCatalog(connection)
     warehouse = Warehouse(connection)
     validator = Validator()
-    fuel = Fuel()
     warehouse_manager = WarehouseManager(catalog, validator, warehouse)
-    loose_material_manager = LooseMaterialManager(catalog, validator)
-    truss_manager = TrussManager(validator, catalog)
-    order_manager = OrderManager(fuel)
-    truss_repository = TrussOrder(connection)
-    loose_material_repository = LooseMaterialOrder(connection)
 
 
     menu = Menu(catalog, warehouse, warehouse_manager, validator, loose_material_manager, truss_manager, fuel, order_manager, truss_repository, loose_material_repository, database)
