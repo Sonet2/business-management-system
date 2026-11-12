@@ -1,33 +1,39 @@
 from database import Database 
 from wood_catalog import WoodCatalog
+import sqlite3
 
 class Warehouse:
     def __init__(self, connection, catalog):
         self.connection = connection
         self.catalog = catalog
-
-    def _fetch_flat_list(self, query, params=()):
-            rows = self.connection.execute(query,params).fetchall()
-            return[row[0] for row in rows]
     
+    def warehouse_insertion(self, material_id, m3_quantity, dimensions, length):
+        
+        try:
+            result = self.connection.execute("""
+                INSERT INTO warehouse (material_id, m3_quantity, dimensions, length)
+                VALUES (?, ?, ?, ?)""", (material_id[0], m3_quantity, dimensions, length))
+            self.connection.commit()
+        except sqlite3.IntegrityError:
+            self.connection.rollback()
+            raise Exception(f"Nie można dodać materiału do magazynu. Sprawdź, czy materiał istnieje w katalogu.")
+        
+        if result.rowcount > 0:
+            return result.lastrowid
+        else:
+            raise Exception("Nie udało się dodać materiału do bazy danych")
     
     def write_to_warehouse(self, category, subcategory, wood_specie, m3, dimensions, length):
         material_id = self.catalog.get_position_id(category, subcategory, wood_specie)
-
+                
         if not material_id or material_id == [None]:
-            print("Nie znaleziono materiału w katalogu drewna.")
+            raise Exception("Nie znaleziono materiału w katalogu. Nie można dodać do magazynu.")
             return
-        
-        
-        result = self.connection.execute("""
-            INSERT INTO warehouse (material_id, m3_quantity, dimensions, length)
-            VALUES (?, ?, ?, ?)
-        """, (material_id[0], m3, dimensions, length))
 
-        self.connection.commit()
+        result = self.warehouse_insertion(material_id, m3, dimensions, length)
 
-        if result.rowcount > 0:
-            print("Materiał został dodany do magazynu.")
+        if result:
+            print("Materiał został poprawnie dodany do magazynu.")
 
     
     def delete_material(self, id_to_delete: int):
@@ -37,17 +43,37 @@ class Warehouse:
             return True
         else:
             return False
-
+    def get_warehouse(self):
+        result = self.connection.execute("""
+                SELECT warehouse.id, materials.category, materials.subcategory, wood_species.name, warehouse.m3_quantity, warehouse.dimensions, warehouse.length
+                FROM warehouse 
+                INNER JOIN materials ON warehouse.material_id = materials.id 
+                LEFT JOIN wood_species ON materials.wood_species_id = wood_species.id
+                """)
+        results = []
+        for entry in result:
+            results.append(entry)
+        return results
+    
     def display_warehouse(self):
-        results = self.connection.execute("SELECT warehouse.id, materials.category, materials.subcategory, wood_species.name, m3_quantity, dimensions, length FROM warehouse INNER JOIN materials ON warehouse.material_id = materials.id LEFT JOIN wood_species ON materials.wood_species_id = wood_species.id")
-        for entry in results:
-            if entry[2] is None:
-                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: brak, Gatunek: {entry[3]}, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}")
-            elif entry[3] is None:
-                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: brak, Gatunek: brak, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}")
-            else:
-                print(f"ID: {entry[0]}, Kategoria: {entry[1]}, Podkategoria: {entry[2]}, Gatunek: {entry[3]}, Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, Długość: {entry[6]}") 
+        results = self.get_warehouse()
 
+        for entry in results:
+            subcategory = entry[2]
+            specie = entry[3]
+
+            if subcategory is None:
+                subcategory = "brak"
+
+            if specie is None:
+                specie = "brak"
+
+            print(
+                f"ID: {entry[0]}, Kategoria: {entry[1]}, "
+                f"Podkategoria: {subcategory}, Gatunek: {specie}, "
+                f"Ilość m3: {entry[4]}, Wymiary sztuki: {entry[5]}, "
+                f"Długość: {entry[6]}"
+            )
 
 class WarehouseManager:
     def __init__(self, catalog, validator, warehouse):
@@ -76,10 +102,10 @@ class WarehouseManager:
             
         m3 = self.validator.get_valid_number("Wprowadź ilość w m3: ", float, 0.0001)
 
-        dimensions = input("Wprowadź wymiary sztuki: ")        
+        dimensions = input("Wprowadź wymiary sztuki: ").strip()        
         while not dimensions:            
             print("Wymiary sztuki nie mogą być puste.")            
-            dimensions = input("Wprowadź wymiary sztuki: ")
+            dimensions = input("Wprowadź wymiary sztuki: ").strip()
 
         length = self.validator.get_valid_number("Wprowadź długość drewna: ", float, 0.0001)
 
